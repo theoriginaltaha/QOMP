@@ -1,47 +1,13 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
 // server/src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  default: () => index_default
-});
-module.exports = __toCommonJS(index_exports);
-var import_express8 = __toESM(require("express"), 1);
-var import_cors = __toESM(require("cors"), 1);
+import express3 from "express";
+import cors from "cors";
 
 // server/src/routes/customerRoutes.ts
-var import_express = require("express");
+import { Router } from "express";
 
 // server/src/controllers/customerController.ts
-var import_client = require("@prisma/client");
-var prisma = new import_client.PrismaClient();
+import { PrismaClient } from "@prisma/client";
+var prisma = new PrismaClient();
 var getCustomers = async (req, res) => {
   try {
     const customers = await prisma.customer.findMany({
@@ -324,34 +290,30 @@ var hardDeleteCustomer = async (req, res) => {
 };
 
 // server/src/middlewares/uploadMiddleware.ts
-var import_multer = __toESM(require("multer"), 1);
-var import_path = __toESM(require("path"), 1);
-var import_fs = __toESM(require("fs"), 1);
-var import_url = require("url");
-var import_meta = {};
-var __filename = (0, import_url.fileURLToPath)(import_meta.url);
-var __dirname = import_path.default.dirname(__filename);
-var uploadDir = import_path.default.join(__dirname, "../../../uploads");
-if (!import_fs.default.existsSync(uploadDir)) {
-  import_fs.default.mkdirSync(uploadDir, { recursive: true });
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+var uploadDir = process.env.VERCEL ? path.join("/tmp", "uploads") : path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
-var storage = import_multer.default.diskStorage({
+var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + import_path.default.extname(file.originalname));
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
-var upload = (0, import_multer.default)({
+var upload = multer({
   storage,
   limits: { fileSize: 50 * 1024 * 1024 }
   // 50MB limit
 });
 
 // server/src/routes/customerRoutes.ts
-var router = (0, import_express.Router)();
+var router = Router();
 router.get("/recycle-bin/customers", getRecycleBin);
 router.get("/customers", getCustomers);
 router.post("/customers", createCustomer);
@@ -376,11 +338,11 @@ router.post("/customers/:id/renewals", createRenewal);
 var customerRoutes_default = router;
 
 // server/src/routes/environmentRoutes.ts
-var import_express2 = require("express");
+import { Router as Router2 } from "express";
 
 // server/src/controllers/environmentController.ts
-var import_client2 = require("@prisma/client");
-var prisma2 = new import_client2.PrismaClient();
+import { PrismaClient as PrismaClient2 } from "@prisma/client";
+var prisma2 = new PrismaClient2();
 var getEnvironments = async (req, res) => {
   try {
     const environments = await prisma2.environment.findMany({
@@ -474,7 +436,7 @@ var deleteCertificate = async (req, res) => {
 };
 
 // server/src/routes/environmentRoutes.ts
-var router2 = (0, import_express2.Router)();
+var router2 = Router2();
 router2.get("/environments", getEnvironments);
 router2.get("/environments/:id", getEnvironmentById);
 router2.post("/customers/:id/environments", createEnvironment);
@@ -486,11 +448,11 @@ router2.delete("/certificates/:id", deleteCertificate);
 var environmentRoutes_default = router2;
 
 // server/src/routes/authRoutes.ts
-var import_express3 = require("express");
+import { Router as Router3 } from "express";
 
 // server/src/controllers/authController.ts
-var import_client3 = require("@prisma/client");
-var prisma3 = new import_client3.PrismaClient();
+import { PrismaClient as PrismaClient3 } from "@prisma/client";
+var prisma3 = new PrismaClient3();
 var login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -583,7 +545,7 @@ var markNotificationRead = async (req, res) => {
 };
 
 // server/src/routes/authRoutes.ts
-var router3 = (0, import_express3.Router)();
+var router3 = Router3();
 router3.post("/login", login);
 router3.get("/users", getUsers);
 router3.post("/users", createUser);
@@ -593,11 +555,11 @@ router3.patch("/notifications/:id/read", markNotificationRead);
 var authRoutes_default = router3;
 
 // server/src/routes/statsRoutes.ts
-var import_express4 = require("express");
+import { Router as Router4 } from "express";
 
 // server/src/controllers/statsController.ts
-var import_client4 = require("@prisma/client");
-var prisma4 = new import_client4.PrismaClient();
+import { PrismaClient as PrismaClient4 } from "@prisma/client";
+var prisma4 = new PrismaClient4();
 var getStats = async (req, res) => {
   try {
     const customerCount = await prisma4.customer.count({ where: { isDeleted: false } });
@@ -644,19 +606,19 @@ var search = async (req, res) => {
 };
 
 // server/src/routes/statsRoutes.ts
-var router4 = (0, import_express4.Router)();
+var router4 = Router4();
 router4.get("/stats", getStats);
 router4.get("/search", search);
 var statsRoutes_default = router4;
 
 // server/src/routes/taskRoutes.ts
-var import_express6 = __toESM(require("express"), 1);
+import express2 from "express";
 
 // server/src/controllers/taskController.ts
-var import_express5 = __toESM(require("express"), 1);
-var import_client5 = require("@prisma/client");
-var { Request, Response } = import_express5.default;
-var prisma5 = new import_client5.PrismaClient();
+import express from "express";
+import { PrismaClient as PrismaClient5 } from "@prisma/client";
+var { Request, Response } = express;
+var prisma5 = new PrismaClient5();
 var getAllTasks = async (req, res) => {
   try {
     const tasks = await prisma5.task.findMany({ where: { isDeleted: false }, include: { customer: true } });
@@ -722,7 +684,7 @@ var deleteTask = async (req, res) => {
 };
 
 // server/src/routes/taskRoutes.ts
-var { Router: Router5 } = import_express6.default;
+var { Router: Router5 } = express2;
 var router5 = Router5();
 router5.get("/tasks", getAllTasks);
 router5.post("/customers/:customerId/tasks", createTask);
@@ -732,11 +694,11 @@ router5.delete("/tasks/:id", deleteTask);
 var taskRoutes_default = router5;
 
 // server/src/routes/ticketRoutes.ts
-var import_express7 = require("express");
+import { Router as Router6 } from "express";
 
 // server/src/controllers/ticketController.ts
-var import_client6 = require("@prisma/client");
-var prisma6 = new import_client6.PrismaClient();
+import { PrismaClient as PrismaClient6 } from "@prisma/client";
+var prisma6 = new PrismaClient6();
 var getJiraTickets = async (req, res) => {
   try {
     const tickets = await prisma6.jiraTicket.findMany({
@@ -821,7 +783,7 @@ var deleteCustomerTicket = async (req, res) => {
 };
 
 // server/src/routes/ticketRoutes.ts
-var router6 = (0, import_express7.Router)();
+var router6 = Router6();
 router6.get("/tickets/jira", getJiraTickets);
 router6.post("/customers/:id/tickets/jira", createJiraTicket);
 router6.delete("/tickets/jira/:id", deleteJiraTicket);
@@ -831,11 +793,11 @@ router6.delete("/tickets/support/:id", deleteCustomerTicket);
 var ticketRoutes_default = router6;
 
 // server/src/services/sslCronService.ts
-var import_node_cron = __toESM(require("node-cron"), 1);
-var import_client7 = require("@prisma/client");
-var prisma7 = new import_client7.PrismaClient();
+import cron from "node-cron";
+import { PrismaClient as PrismaClient7 } from "@prisma/client";
+var prisma7 = new PrismaClient7();
 var initSslCronJob = () => {
-  import_node_cron.default.schedule("0 0 * * *", async () => {
+  cron.schedule("0 0 * * *", async () => {
     console.log("Running SSL Expiry Cron Job...");
     try {
       await checkSslCertificates();
@@ -883,10 +845,10 @@ var checkSslCertificates = async () => {
 };
 
 // server/src/index.ts
-var app = (0, import_express8.default)();
+var app = express3();
 var PORT = process.env.PORT || 3e3;
-app.use((0, import_cors.default)());
-app.use(import_express8.default.json());
+app.use(cors());
+app.use(express3.json());
 if (!process.env.VERCEL) {
 }
 app.use("/api", authRoutes_default);
@@ -904,3 +866,6 @@ if (!process.env.VERCEL) {
   });
 }
 var index_default = app;
+export {
+  index_default as default
+};
