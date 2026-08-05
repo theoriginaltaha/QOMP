@@ -1,23 +1,11 @@
 import express from 'express';
 type Request = express.Request;
 type Response = express.Response;
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import * as customerService from '../services/customerService';
 
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const customers = await prisma.customer.findMany({
-      where: { isDeleted: false },
-      include: { 
-        environments: { where: { isDeleted: false } }, 
-        contacts: { where: { isDeleted: false } }, 
-        schools: { where: { isDeleted: false } }, 
-        tasks: { where: { isDeleted: false } }, 
-        meetings: { where: { isDeleted: false } }, 
-        renewals: { where: { isDeleted: false } } 
-      }
-    });
+    const customers = await customerService.fetchCustomers();
     res.json(customers);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching customers' });
@@ -26,41 +14,18 @@ export const getCustomers = async (req: Request, res: Response) => {
 
 export const getCustomerById = async (req: Request, res: Response) => {
   try {
-    const customer = await prisma.customer.findUnique({
-      where: { id: req.params.id },
-      include: { 
-        environments: { where: { isDeleted: false } }, 
-        contacts: { where: { isDeleted: false } }, 
-        schools: { where: { isDeleted: false }, include: { contacts: { where: { isDeleted: false } } } }, 
-        tasks: { where: { isDeleted: false } }, 
-        meetings: { where: { isDeleted: false } }, 
-        renewals: { where: { isDeleted: false } },
-        resources: { where: { isDeleted: false } },
-        jiraTickets: { where: { isDeleted: false } },
-        customerTickets: { where: { isDeleted: false } }
-      }
-    });
-    if (!customer) return res.status(404).json({ error: 'Customer not found' });
+    const customer = await customerService.fetchCustomerById(req.params.id);
     res.json(customer);
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'Customer not found') return res.status(404).json({ error: error.message });
     res.status(500).json({ error: 'Error fetching customer' });
   }
 };
 
 export const createCustomer = async (req: Request, res: Response) => {
   try {
-    const { name, code, type, industry, websiteUrl, studentPortalUrl, teacherPortalUrl } = req.body;
-    const newCustomer = await prisma.customer.create({
-      data: {
-        name, code, type, industry, websiteUrl, studentPortalUrl, teacherPortalUrl,
-        status: 'Active', contractStatus: 'Draft', accountManager: 'Unassigned',
-        customerSuccessManager: 'Unassigned', supportOwner: 'Unassigned', healthScore: 'Neutral',
-        contractStartDate: new Date().toISOString().split('T')[0],
-        contractEndDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
-        subscriptionType: 'Standard'
-      }
-    });
-    res.status(201).json(newCustomer);
+    const customer = await customerService.createNewCustomer(req.body);
+    res.status(201).json(customer);
   } catch (error) {
     res.status(500).json({ error: 'Error creating customer' });
   }
@@ -68,11 +33,7 @@ export const createCustomer = async (req: Request, res: Response) => {
 
 export const updateAccountTeam = async (req: Request, res: Response) => {
   try {
-    const { accountManager, customerSuccessManager, supportOwner } = req.body;
-    const customer = await prisma.customer.update({
-      where: { id: req.params.id },
-      data: { accountManager, customerSuccessManager, supportOwner }
-    });
+    const customer = await customerService.updateAccountTeam(req.params.id, req.body);
     res.json(customer);
   } catch (error) {
     res.status(500).json({ error: 'Error updating account team' });
@@ -81,10 +42,7 @@ export const updateAccountTeam = async (req: Request, res: Response) => {
 
 export const createResource = async (req: Request, res: Response) => {
   try {
-    const { title, type, url } = req.body;
-    const resource = await prisma.customerResource.create({
-      data: { customerId: req.params.id, title, type, url }
-    });
+    const resource = await customerService.addResource(req.params.id, req.body);
     res.status(201).json(resource);
   } catch (error) {
     res.status(500).json({ error: 'Error creating resource' });
@@ -93,10 +51,7 @@ export const createResource = async (req: Request, res: Response) => {
 
 export const deleteResource = async (req: Request, res: Response) => {
   try {
-    await prisma.customerResource.update({
-      where: { id: req.params.id },
-      data: { isDeleted: true, deletedAt: new Date() }
-    });
+    await customerService.removeResource(req.params.id);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting resource' });
@@ -105,17 +60,11 @@ export const deleteResource = async (req: Request, res: Response) => {
 
 export const uploadResource = async (req: Request, res: Response) => {
   try {
-    const { title, type } = req.body;
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
-    // Construct the URL to access the file statically
-    const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
-    
-    const resource = await prisma.customerResource.create({
-      data: { customerId: req.params.id, title, type, url: fileUrl }
-    });
+    const fileUrl = `/uploads/${req.file.filename}`;
+    const resource = await customerService.addResource(req.params.id, { title: req.body.title, type: req.body.type, url: fileUrl });
     res.status(201).json(resource);
   } catch (error) {
     res.status(500).json({ error: 'Error uploading resource' });
@@ -124,11 +73,7 @@ export const uploadResource = async (req: Request, res: Response) => {
 
 export const updatePortals = async (req: Request, res: Response) => {
   try {
-    const { websiteUrl, studentPortalUrl, teacherPortalUrl } = req.body;
-    const customer = await prisma.customer.update({
-      where: { id: req.params.id },
-      data: { websiteUrl, studentPortalUrl, teacherPortalUrl }
-    });
+    const customer = await customerService.updatePortals(req.params.id, req.body);
     res.json(customer);
   } catch (error) {
     res.status(500).json({ error: 'Error updating portal links' });
@@ -137,10 +82,7 @@ export const updatePortals = async (req: Request, res: Response) => {
 
 export const createContact = async (req: Request, res: Response) => {
   try {
-    const { name, jobTitle, email, phone, isPrimary, schoolId } = req.body;
-    const contact = await prisma.contact.create({
-      data: { customerId: req.params.id, name, jobTitle, email, phone, isPrimary, schoolId }
-    });
+    const contact = await customerService.addContact(req.params.id, req.body);
     res.status(201).json(contact);
   } catch (error) {
     res.status(500).json({ error: 'Error creating contact' });
@@ -149,10 +91,7 @@ export const createContact = async (req: Request, res: Response) => {
 
 export const deleteContact = async (req: Request, res: Response) => {
   try {
-    await prisma.contact.update({
-      where: { id: req.params.id },
-      data: { isDeleted: true, deletedAt: new Date() }
-    });
+    await customerService.removeContact(req.params.id);
     res.json({ message: 'Contact deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting contact' });
@@ -161,11 +100,7 @@ export const deleteContact = async (req: Request, res: Response) => {
 
 export const updateContact = async (req: Request, res: Response) => {
   try {
-    const { name, jobTitle, email, phone, isPrimary } = req.body;
-    const contact = await prisma.contact.update({
-      where: { id: req.params.id },
-      data: { name, jobTitle, email, phone, isPrimary }
-    });
+    const contact = await customerService.editContact(req.params.id, req.body);
     res.json(contact);
   } catch (error) {
     res.status(500).json({ error: 'Error updating contact' });
@@ -174,25 +109,7 @@ export const updateContact = async (req: Request, res: Response) => {
 
 export const createSchool = async (req: Request, res: Response) => {
   try {
-    const { code, name, educationalStage, city, status, studentPortalUrl, teacherPortalUrl, coordinatorName, coordinatorPhone, coordinatorEmail } = req.body;
-    const school = await prisma.school.create({
-      data: { customerId: req.params.id, code, name, educationalStage, city, status, studentPortalUrl, teacherPortalUrl }
-    });
-    
-    if (coordinatorName) {
-      await prisma.contact.create({
-        data: {
-          customerId: req.params.id,
-          schoolId: school.id,
-          name: coordinatorName,
-          jobTitle: 'Coordinator',
-          phone: coordinatorPhone || '',
-          email: coordinatorEmail || '',
-          isPrimary: true
-        }
-      });
-    }
-    
+    const school = await customerService.addSchool(req.params.id, req.body);
     res.status(201).json(school);
   } catch (error) {
     res.status(500).json({ error: 'Error creating school' });
@@ -201,11 +118,7 @@ export const createSchool = async (req: Request, res: Response) => {
 
 export const updateSchool = async (req: Request, res: Response) => {
   try {
-    const { code, name, educationalStage, city, status, studentPortalUrl, teacherPortalUrl } = req.body;
-    const school = await prisma.school.update({
-      where: { id: req.params.id },
-      data: { code, name, educationalStage, city, status, studentPortalUrl, teacherPortalUrl }
-    });
+    const school = await customerService.editSchool(req.params.id, req.body);
     res.json(school);
   } catch (error) {
     res.status(500).json({ error: 'Error updating school' });
@@ -214,7 +127,7 @@ export const updateSchool = async (req: Request, res: Response) => {
 
 export const getMeetings = async (req: Request, res: Response) => {
   try {
-    const meetings = await prisma.meeting.findMany({ where: { isDeleted: false }, include: { customer: true } });
+    const meetings = await customerService.fetchMeetings();
     res.json(meetings);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching meetings' });
@@ -223,10 +136,7 @@ export const getMeetings = async (req: Request, res: Response) => {
 
 export const createMeeting = async (req: Request, res: Response) => {
   try {
-    const { title, type, date, status, organizer } = req.body;
-    const meeting = await prisma.meeting.create({
-      data: { customerId: req.params.id, title, type, date, status, organizer }
-    });
+    const meeting = await customerService.addMeeting(req.params.id, req.body);
     res.status(201).json(meeting);
   } catch (error) {
     res.status(500).json({ error: 'Error creating meeting' });
@@ -235,7 +145,7 @@ export const createMeeting = async (req: Request, res: Response) => {
 
 export const getRenewals = async (req: Request, res: Response) => {
   try {
-    const renewals = await prisma.renewal.findMany({ where: { isDeleted: false }, include: { customer: true } });
+    const renewals = await customerService.fetchRenewals();
     res.json(renewals);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching renewals' });
@@ -244,10 +154,7 @@ export const getRenewals = async (req: Request, res: Response) => {
 
 export const createRenewal = async (req: Request, res: Response) => {
   try {
-    const { renewalDate, status, owner } = req.body;
-    const renewal = await prisma.renewal.create({
-      data: { customerId: req.params.id, renewalDate, status, owner }
-    });
+    const renewal = await customerService.addRenewal(req.params.id, req.body);
     res.status(201).json(renewal);
   } catch (error) {
     res.status(500).json({ error: 'Error creating renewal' });
@@ -256,10 +163,7 @@ export const createRenewal = async (req: Request, res: Response) => {
 
 export const softDeleteCustomer = async (req: Request, res: Response) => {
   try {
-    const customer = await prisma.customer.update({
-      where: { id: req.params.id },
-      data: { isDeleted: true, deletedAt: new Date() }
-    });
+    const customer = await customerService.softDeleteCustomer(req.params.id);
     res.json({ success: true, customer });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting customer' });
@@ -268,10 +172,7 @@ export const softDeleteCustomer = async (req: Request, res: Response) => {
 
 export const getRecycleBin = async (req: Request, res: Response) => {
   try {
-    const deletedCustomers = await prisma.customer.findMany({
-      where: { isDeleted: true },
-      include: { environments: true, tasks: true }
-    });
+    const deletedCustomers = await customerService.fetchRecycleBin();
     res.json(deletedCustomers);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching recycle bin' });
@@ -280,10 +181,7 @@ export const getRecycleBin = async (req: Request, res: Response) => {
 
 export const restoreCustomer = async (req: Request, res: Response) => {
   try {
-    const customer = await prisma.customer.update({
-      where: { id: req.params.id },
-      data: { isDeleted: false, deletedAt: null }
-    });
+    const customer = await customerService.restoreCustomer(req.params.id);
     res.json({ success: true, customer });
   } catch (error) {
     res.status(500).json({ error: 'Error restoring customer' });
@@ -292,9 +190,7 @@ export const restoreCustomer = async (req: Request, res: Response) => {
 
 export const hardDeleteCustomer = async (req: Request, res: Response) => {
   try {
-    await prisma.customer.delete({
-      where: { id: req.params.id }
-    });
+    await customerService.hardDeleteCustomer(req.params.id);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Error permanently deleting customer' });

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCustomerById, createContact, createSchool } from '../services/api';
-import { createResource, deleteResource } from '../services/api';
+import { 
+  getCustomerById, createContact, createSchool, createResource, deleteResource,
+  deleteCustomer, updateAccountTeam, updatePortals, updateContact, deleteContact, updateSchool 
+} from '../services/api';
 import { AddContactModal } from './AddContactModal';
 import { EditContactModal } from './EditContactModal';
 import { AddSchoolModal } from './AddSchoolModal';
@@ -81,8 +83,8 @@ export const CustomerProfile: React.FC = () => {
   const handleDeleteContact = async (contactId: string, contactName: string) => {
     if (window.confirm(`Are you sure you want to delete ${contactName}?`)) {
       try {
-        const res = await fetch(`/api/contacts/${contactId}`, { method: 'DELETE' });
-        if (res.ok) await loadCustomer(id!);
+        await deleteContact(contactId);
+        await loadCustomer(id!);
       } catch (error) {
         console.error('Failed to delete contact', error);
       }
@@ -91,12 +93,8 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateContact = async (contactId: string, data: any) => {
     try {
-      const res = await fetch(`/api/contacts/${contactId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) await loadCustomer(id!);
+      await updateContact(contactId, data);
+      await loadCustomer(id!);
     } catch (error) {
       console.error(error);
     }
@@ -109,12 +107,8 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateSchool = async (schoolId: string, data: any) => {
     try {
-      const res = await fetch(`/api/schools/${schoolId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) await loadCustomer(id!);
+      await updateSchool(schoolId, data);
+      await loadCustomer(id!);
     } catch (error) {
       console.error(error);
     }
@@ -147,11 +141,7 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateAccountTeam = async (data: any) => {
     try {
-      await fetch(`/api/customers/${id}/team`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+      await updateAccountTeam(id!, data);
       await loadCustomer(id!);
     } catch (error) {
       console.error('Failed to update account team', error);
@@ -161,7 +151,7 @@ export const CustomerProfile: React.FC = () => {
   const handleDeleteCustomer = async () => {
     if (window.confirm(`Are you sure you want to delete ${customer.name}? This will move them to the Recycle Bin.`)) {
       try {
-        await fetch(`/api/customers/${id}`, { method: 'DELETE' });
+        await deleteCustomer(id!);
         navigate('/customers');
       } catch (error) {
         console.error('Failed to delete customer', error);
@@ -172,12 +162,8 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdatePortals = async (data: any) => {
     try {
-      const res = await fetch(`/api/customers/${id}/portals`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) loadCustomer(id!);
+      await updatePortals(id!, data);
+      await loadCustomer(id!);
     } catch (error) {
       console.error(error);
     }

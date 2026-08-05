@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CardWidget } from '../../../shared/components/CardWidget';
 import { Users, Server, AlertTriangle, CheckCircle } from 'lucide-react';
+import { getStats } from '../../../shared/services/api';
 import './MainDashboard.css';
 
 export const MainDashboard: React.FC = () => {
@@ -22,8 +23,7 @@ export const MainDashboard: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('/api/stats');
-      const data = await res.json();
+      const data = await getStats();
       setStats(data);
     } catch (error) {
       console.error('Failed to fetch stats', error);
