@@ -4,7 +4,7 @@
   "outputDirectory": "dist",
   "builds": [
     {
-      "src": "server/src/index.ts",
+      "src": "api/index.js",
       "use": "@vercel/node"
     },
     {
@@ -15,7 +15,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/server/src/index.ts"
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",

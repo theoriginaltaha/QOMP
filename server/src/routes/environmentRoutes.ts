@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
   getEnvironments, getEnvironmentById, createEnvironment, updateEnvironment, deleteEnvironment, 
   createCertificate, updateCertificate, deleteCertificate
-} from '../controllers/environmentController.ts';
+} from '../controllers/environmentController';
 
 const router = Router();
 

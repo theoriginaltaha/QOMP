@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
   getJiraTickets, createJiraTicket, deleteJiraTicket,
   getCustomerTickets, createCustomerTicket, deleteCustomerTicket
-} from '../controllers/ticketController.ts';
+} from '../controllers/ticketController';
 
 const router = Router();
 
@@ -11,7 +11,7 @@ router.get('/tickets/jira', getJiraTickets);
 router.post('/customers/:id/tickets/jira', createJiraTicket);
 router.delete('/tickets/jira/:id', deleteJiraTicket);
 
-import { upload } from '../middlewares/uploadMiddleware.ts';
+import { upload } from '../middlewares/uploadMiddleware';
 
 // Customer Tickets (Support Portal)
 router.get('/tickets/support', getCustomerTickets);

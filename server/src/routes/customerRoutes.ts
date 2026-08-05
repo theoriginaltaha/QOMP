@@ -4,8 +4,8 @@ import {
   createContact, deleteContact, updateContact, createSchool, updateSchool, 
   createResource, deleteResource, uploadResource, getMeetings, createMeeting, getRenewals, createRenewal, 
   softDeleteCustomer, getRecycleBin, restoreCustomer, hardDeleteCustomer 
-} from '../controllers/customerController.ts';
-import { upload } from '../middlewares/uploadMiddleware.ts';
+} from '../controllers/customerController';
+import { upload } from '../middlewares/uploadMiddleware';
 
 const router = Router();
 

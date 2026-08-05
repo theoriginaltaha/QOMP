@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import customerRoutes from './routes/customerRoutes.ts';
-import environmentRoutes from './routes/environmentRoutes.ts';
-import authRoutes from './routes/authRoutes.ts';
-import statsRoutes from './routes/statsRoutes.ts';
-import taskRoutes from './routes/taskRoutes.ts';
-import ticketRoutes from './routes/ticketRoutes.ts';
-import { initSslCronJob } from './services/sslCronService.ts';
+import customerRoutes from './routes/customerRoutes';
+import environmentRoutes from './routes/environmentRoutes';
+import authRoutes from './routes/authRoutes';
+import statsRoutes from './routes/statsRoutes';
+import taskRoutes from './routes/taskRoutes';
+import ticketRoutes from './routes/ticketRoutes';
+import { initSslCronJob } from './services/sslCronService';
 
 import path from 'path';
 // import { fileURLToPath } from 'url';
