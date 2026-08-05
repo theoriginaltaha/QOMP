@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  role        String       @default("User") // Admin or User
+  permissions   Permission[]
+  notifications Notification[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  link      String?  
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Permission {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moduleName String   // "Customers", "CustomerSuccess", "Environments", "Settings"
+  canRead    Boolean  @default(true)
+  canWrite   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, moduleName])
+}
+
+model Customer {
+  id                     String         @id @default(uuid())
+  name                   String
+  code                   String         @unique
+  type                   String
+  industry               String
+  status                 String
+  contractStatus         String
+  accountManager         String
+  customerSuccessManager String
+  supportOwner           String
+  healthScore            String
+  contractStartDate      String
+  contractEndDate        String
+  subscriptionType       String
+  websiteUrl             String?
+  studentPortalUrl       String?
+  teacherPortalUrl       String?
+  numberOfQuestions      Int            @default(0)
+  numberOfExams          Int            @default(0)
+  environments           Environment[]
+  contacts               Contact[]
+  schools                School[]
+  tasks                  Task[]
+  meetings               Meeting[]
+  renewals               Renewal[]
+  resources              CustomerResource[]
+  jiraTickets            JiraTicket[]
+  customerTickets        CustomerTicket[]
+  isDeleted              Boolean        @default(false)
+  deletedAt              DateTime?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+}
+
+model Contact {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  schoolId   String?
+  school     School?  @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  name       String
+  jobTitle   String
+  email      String
+  phone      String
+  isPrimary  Boolean  @default(false)
+  isDeleted  Boolean  @default(false)
+  deletedAt  DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model School {
+  id               String   @id @default(uuid())
+  customerId       String
+  customer         Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  code             String
+  name             String
+  educationalStage String
+  city             String
+  status           String
+  studentPortalUrl String?
+  teacherPortalUrl String?
+  contacts         Contact[]
+  isDeleted        Boolean  @default(false)
+  deletedAt        DateTime?
+  createdAt        DateTime @default(now())
+}
+
+model Task {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title      String
+  priority   String
+  status     String
+  dueDate    String
+  assignee   String
+  isDeleted  Boolean  @default(false)
+  deletedAt  DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model Meeting {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title      String
+  type       String
+  date       String
+  status     String
+  organizer  String
+  isDeleted  Boolean  @default(false)
+  deletedAt  DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model Renewal {
+  id            String   @id @default(uuid())
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  renewalDate   String
+  status        String
+  owner         String
+  isDeleted     Boolean  @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime @default(now())
+}
+
+model Environment {
+  id             String        @id @default(uuid())
+  name           String
+  customerId     String
+  customer       Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  type           String
+  url            String
+  ipAddress      String
+  dbVersion      String
+  appVersion     String
+  status         String
+  pedDate        String?
+  lastDeployment String
+  certificates   Certificate[]
+  isDeleted      Boolean       @default(false)
+  deletedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Certificate {
+  id            String      @id @default(uuid())
+  environmentId String
+  environment   Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  domain        String
+  issuer        String
+  validFrom     String
+  validTo       String
+  status        String
+  isDeleted     Boolean     @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+model JiraTicket {
+  id            String      @id @default(uuid())
+  ticketId      String
+  customerId    String
+  customer      Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title         String
+  type          String
+  status        String
+  priority      String
+  assignee      String
+  isDeleted     Boolean     @default(false)
+  deletedAt     DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+model CustomerResource {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title      String
+  type       String   
+  url        String
+  isDeleted  Boolean  @default(false)
+  deletedAt  DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model CustomerTicket {
+  id          String   @id @default(uuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  attachmentUrl String?
+  status      String   @default("Open")
+  isDeleted   Boolean  @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

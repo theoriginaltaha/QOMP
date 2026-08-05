@@ -1,0 +1,2876 @@
+Document Version:
+ 1.0
+Document Title:
+ 
+Qorrect
+ Operations Management Platform (QOMP) - Business Requirements Document (BRD)
+Part 1 – Executive Summary, Vision & Platform Foundation
+1. Executive Summary
+1.1 Overview
+Qorrect
+ Operations Management Platform (QOMP) is an internal enterprise platform designed to centralize operational processes across different departments within 
+Qorrect
+.
+The platform initially combines Customer Relationship Management (CRM), Customer Success Management, and Environment Management into a single integrated solution while providing an architecture that allows future expansion into additional business domains such as HR, Finance, Inventory, Asset Management, and other operational modules.
+Instead of maintaining multiple disconnected systems, QOMP provides a unified platform where users can manage customers, operational environments, deployments, support activities, meetings, tasks, reports, and integrations from one centralized application.
+1.2 Business Problem
+Currently, business information is distributed across multiple tools and manual processes.
+Examples include:
+Customer information
+Customer Success activities
+Environment configurations
+Jira tickets
+Meetings
+Deployment tracking
+Certificates
+Documentation
+This separation creates several challenges:
+Duplicate data
+Difficult tracking
+Poor visibility
+Manual communication
+Limited reporting
+Lost operational history
+QOMP addresses these issues by becoming the single source of truth for all operational activities.
+1.3 Product Vision
+Create a modular enterprise platform that enables every department to perform its daily operations from a unified system while maintaining security, scalability, and flexibility.
+The platform should reduce manual work, improve collaboration, simplify reporting, and provide complete operational visibility.
+1.4 Product Goals
+The platform aims to achieve the following objectives:
+Centralize operational information.
+Improve customer management.
+Improve customer success workflows.
+Simplify environment management.
+Track operational activities.
+Integrate with external systems.
+Increase visibility across departments.
+Support future expansion without redesigning the platform.
+1.5 Product Scope (MVP)
+The first version of the platform will include:
+Dashboard
+Customer Management
+Customer Success
+Environment Management
+Jira Integration
+User Management
+Notifications
+Reports
+Search
+Timeline
+Attachments
+Comments
+Tags
+Favorites
+Audit Logs
+Settings
+Future business modules are intentionally excluded from the MVP but supported by the platform architecture.
+2. Product Principles
+The following principles apply to every module within the platform.
+2.1 Modular Architecture
+Every business function must exist as an independent module.
+Examples:
+Customer Management
+Customer Success
+Environment Management
+HR
+Finance
+Inventory
+Modules should communicate through shared platform services while remaining independently maintainable.
+2.2 Security First
+Every action inside the platform must respect:
+User Role
+Module Membership
+Permissions
+Users should never access information outside their authorized scope.
+2.3 Reusable Platform Services
+Instead of rebuilding features for every module, common platform services will be shared.
+Examples include:
+Attachments
+Comments
+Notifications
+Timeline
+Search
+Audit Logs
+Tags
+Favorites
+2.4 Scalability
+The platform must support adding new modules without requiring major architectural changes.
+2.5 Single Source of Truth
+Every business entity should have one authoritative record inside the platform.
+External systems should synchronize with this record instead of replacing it.
+3. Platform Architecture
+Qorrect
+ Operations Management Platform
+│
+├
+──
+ Dashboard
+│
+├
+──
+ Customer Management
+│
+├
+──
+ Customer Success
+│
+├
+──
+ Environment Management
+│
+├
+──
+ Reports
+│
+├
+──
+ Notification Center
+│
+├
+──
+ Global Search
+│
+├
+──
+ Timeline
+│
+├
+──
+ User Management
+│
+├
+──
+ Settings
+│
+└── Integrations
+      └── Jira
+Future modules:
+HR
+Finance
+Inventory
+Asset Management
+Knowledge Base
+Internal Announcements
+4. User Roles
+System Roles define what users are allowed to do inside the platform.
+Initial roles include:
+Super Admin
+Full access to every feature and setting.
+Admin
+Administrative permissions except platform ownership.
+Manager
+Can manage operational data within assigned modules.
+Employee
+Standard daily operations.
+Read Only
+View-only access.
+5. Module Membership
+A user may belong to one or more business modules.
+Examples:
+Customer Success
+Environment Management
+QA
+Development
+Support
+Sales
+Finance (Future)
+HR (Future)
+Module membership determines:
+Visible modules
+Dashboard widgets
+Notifications
+Search results
+Timeline visibility
+Assignments
+6. Permission Model
+Access is determined by three layers.
+Layer 1 — Authentication
+Users log in using:
+Username
+Password
+Layer 2 — Role
+Determines allowed operations.
+Examples:
+Create
+Edit
+Delete
+Export
+Manage Users
+Configure Settings
+Layer 3 — Module Membership
+Determines accessible business domains.
+Example:
+A user assigned only to Customer Success:
+Can access:
+Customers
+Meetings
+Tasks
+Renewals
+Cannot access:
+Environment Management
+QA
+Finance
+Even Global Search, Notifications, and Timeline must respect these restrictions.
+7. Core Platform Services
+Every module should support the following shared services whenever applicable.
+Service
+Supported
+Attachments
+✅
+Comments
+✅
+ (Optional per module)
+Tags
+✅
+Notifications
+✅
+Timeline
+✅
+Search
+✅
+Audit Log
+✅
+Favorites
+✅
+Custom Fields
+✅
+Dynamic Status
+✅
+8. Authentication
+Authentication method:
+Username
+Password
+Microsoft SSO is intentionally out of scope for Version 1.
+9. High-Level Business Entities
+The platform revolves around the following core entities:
+Customer
+Environment
+Contact
+Meeting
+Task
+Jira Ticket
+Deployment
+Certificate
+User
+Notification
+Attachment
+Comment
+Tag
+Timeline Event
+These entities form the foundation for all current and future modules.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 2 – Dashboard & Customer Management Module
+10. Dashboard Module
+10.1 Purpose
+The Dashboard is the landing page of the platform and provides users with a personalized overview of their operational activities.
+The dashboard is dynamic and adapts based on:
+User Role
+Module Membership
+Assigned Work
+Permissions
+Every user should only see information they are authorized to access.
+10.2 Objectives
+The dashboard should allow users to:
+Monitor daily activities
+View pending work
+Track KPIs
+Receive notifications
+Quickly navigate to frequently used data
+Identify operational issues without opening individual modules
+10.3 Dashboard Sections
+The dashboard may contain the following widgets.
+My Work
+Displays everything currently assigned to the logged-in user.
+Includes:
+Assigned Tasks
+Assigned Meetings
+Jira Tickets
+Pending Renewals
+Deployments
+QA Activities
+Each item should link directly to its source module.
+Today's Activities
+Displays:
+Meetings
+Scheduled Tasks
+Follow-ups
+Planned Deployments
+Certificate Renewals
+Notifications
+Displays unread notifications.
+Notifications are grouped by module.
+Examples:
+Customer Success
+Customer Health Changed
+Renewal Due
+Meeting Reminder
+Environment
+Deployment Completed
+Certificate Expiring
+Environment Status Updated
+Jira
+Ticket Assigned
+Ticket Updated
+Ticket Closed
+Recent Activity
+Displays the latest Timeline Events from all accessible modules.
+Examples:
+Customer Created
+Environment Added
+Deployment Completed
+Comment Added
+Meeting Completed
+Favorites
+Displays pinned items.
+Supported objects:
+Customers
+Environments
+Reports
+Dashboards
+Quick Actions
+Examples:
+Create Customer
+Create Meeting
+Create Task
+Create Environment
+Create Jira Ticket
+Quick Actions should only display operations allowed by user permissions.
+KPI Widgets
+Examples:
+Customer Success
+Total Customers
+Active Customers
+Customers at Risk
+Upcoming Renewals
+Environment
+Total Environments
+Online Environments
+Offline Environments
+Expiring Certificates
+Jira
+Open Tickets
+Critical Tickets
+Closed Today
+10.4 Dashboard Personalization
+Users should be able to:
+Rearrange widgets
+Hide widgets
+Resize widgets
+Pin favorite widgets
+Preferences are stored per user.
+11. Customer Management Module
+11.1 Purpose
+The Customer Management module acts as the master repository for all customer-related information.
+Every operational activity inside the platform begins with a 
+Customer
+.
+Customer Success, Environments, Meetings, Deployments, Renewals, Tickets, and Reports all reference the Customer entity.
+11.2 Objectives
+Provide a centralized Customer Profile that contains:
+General Information
+Contacts
+Schools
+Environments
+Meetings
+Tasks
+Tickets
+Files
+Timeline
+Comments
+The Customer becomes the operational hub for all related business activities.
+11.3 Customer List
+The Customer List displays all customers visible to the current user.
+Supported operations:
+Search
+Filters
+Sorting
+Pagination
+Export
+Favorite
+Tags
+Bulk Actions (where permitted)
+11.4 Customer Information
+Each customer should contain the following information.
+Basic Information
+Customer Name
+Customer Code
+Customer Type
+Industry
+Status
+Contract Status
+Account Manager
+Customer Success Manager
+Support Owner
+Contact Information
+Email
+Phone
+Address
+Country
+City
+Business Information
+Contract Start Date
+Contract End Date
+Renewal Date
+Subscription Type
+Custom Fields
+Administrators can define additional customer fields without changing the application.
+Examples:
+School Code
+CRM ID
+Tax Number
+Internal Notes
+11.5 Customer Status
+Customer Status values are configurable.
+Examples:
+Active
+Pending
+Suspended
+Closed
+Administrators may create additional statuses through Settings.
+11.6 Customer Tags
+Customers support unlimited Free Tags.
+Examples:
+#VIP
+#Government
+#Renewal2027
+#Priority
+Business Rules
+Tags are optional.
+Users may enter any tag.
+Previous tags appear as suggestions.
+Clicking a 
+tag searches
+ for all accessible records using that tag.
+Search respects user permissions.
+11.7 Customer Attachments
+Customers support unlimited attachments.
+Examples:
+Contracts
+Signed Agreements
+PDFs
+Excel Files
+Screenshots
+Documentation
+Each attachment stores:
+File Name
+File Type
+Uploaded By
+Upload Date
+File Size
+11.8 Customer Comments
+Comments are optional.
+Each comment contains:
+Author
+Date
+Time
+Comment Text
+Future versions may support:
+Mentions (@User)
+Comment Reactions
+11.9 Customer Timeline
+Every customer automatically maintains a chronological activity timeline.
+Examples:
+Customer Created
+↓
+Contract Uploaded
+↓
+Meeting Scheduled
+↓
+Environment Created
+↓
+Deployment Completed
+↓
+Jira Ticket Created
+↓
+Renewal Completed
+Users only see timeline events from modules they have permission to access.
+12. Customer Contacts
+Each customer may have multiple contacts.
+Examples:
+IT Manager
+School Principal
+Finance Contact
+Support Contact
+Operations Manager
+Each contact contains:
+Name
+Job Title
+Department
+Email
+Phone
+Mobile
+Preferred Contact Method
+Supported Operations
+Add
+Edit
+Archive
+Search
+Attachments and comments are supported.
+13. Schools
+One customer may own multiple schools.
+Each school contains:
+School Name
+School Code
+Educational Stage
+City
+Address
+Principal
+Status
+Every school belongs to exactly one customer.
+14. Customer 360 View
+The Customer Details page provides a complete operational overview.
+Instead of navigating between modules, users can view all customer-related information in one place.
+The Customer Profile contains:
+Overview
+Customer Summary
+Health Score
+Status
+Account Managers
+Active Environments
+Contacts
+Complete contact directory.
+Schools
+Customer schools.
+Environments
+All environments linked to the customer.
+Customer Success
+Meetings
+Tasks
+Success Plans
+Renewals
+Jira
+Displays linked Jira Issues.
+Creation occurs directly inside the platform.
+Submitting creates the issue in Jira automatically.
+The platform stores:
+Issue Key
+Status
+Priority
+Assignee
+Jira Link
+Files
+Customer documents.
+Comments
+Discussion history.
+Timeline
+Operational history.
+Related Tags
+All customer tags.
+15. Business Rules
+BR-001
+A customer may own multiple environments.
+BR-002
+Every environment belongs to exactly one customer.
+BR-003
+Deleting a customer is not allowed if related operational records exist.
+Soft Delete should be used instead.
+BR-004
+Global Search only returns customers visible to the logged-in user.
+BR-005
+Timeline events from restricted modules must never appear.
+BR-006
+Attachments inherit customer permissions.
+BR-007
+Comments inherit customer permissions.
+BR-008
+Favorites are personal.
+One user's favorites must never affect another user.
+BR-009
+Tags are optional and user-defined.
+BR-010
+Customer custom fields are managed by administrators through Settings.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 3 – Customer Success Module
+16. Customer Success Module
+16.1 Purpose
+The Customer Success Module enables Customer Success teams to proactively manage customer relationships, monitor customer health, schedule engagements, track follow-up activities, manage renewals, and ensure long-term customer satisfaction.
+Unlike traditional CRM systems that focus primarily on sales, this module is designed to support customers throughout their entire lifecycle after onboarding.
+16.2 Objectives
+The module should enable users to:
+Manage customer engagements
+Track meetings
+Schedule follow-ups
+Monitor customer health
+Manage customer tasks
+Track renewals
+Create Jira tickets when technical issues arise
+Maintain complete interaction history
+Improve customer retention
+17. Customer Success Dashboard
+The Customer Success Dashboard provides an operational overview specifically for Customer Success users.
+Widgets may include:
+Customer Health
+Healthy Customers
+At Risk Customers
+Critical Customers
+Upcoming Meetings
+Displays 
+today's
+ and upcoming meetings.
+Upcoming Renewals
+Shows contracts approaching renewal.
+Assigned Tasks
+Displays pending customer-related tasks.
+Open Jira Tickets
+Displays unresolved tickets related to managed customers.
+Customer Activity Feed
+Recent customer activities.
+Examples:
+Meeting Completed
+Health Score Updated
+Renewal Added
+Ticket Created
+Comment Added
+18. Meetings
+Purpose
+Meetings record all interactions between the company and the customer.
+Meetings may be linked to:
+Customer
+Environment
+Customer + Environment
+Meeting Information
+Each meeting includes:
+Meeting Title
+Customer
+Environment (Optional)
+Meeting Type
+Date
+Start Time
+End Time
+Organizer
+Participants
+Meeting Location
+Meeting Link (Teams/Zoom/etc.)
+Status
+Outcome
+Summary
+Attachments
+Examples:
+Meeting Minutes
+Presentation
+PDF
+Images
+Comments
+Optional discussion thread.
+Meeting Status
+Statuses are configurable.
+Examples:
+Planned
+Scheduled
+Completed
+Cancelled
+Rescheduled
+Notifications
+Examples:
+Meeting Reminder
+Meeting Updated
+Meeting Cancelled
+Meeting Started
+Business Rules
+BR-CS-001
+Meetings may belong to either:
+Customer
+Environment
+Both
+BR-CS-002
+Completed meetings automatically appear in Timeline.
+BR-CS-003
+Users only view meetings within authorized modules.
+19. Tasks
+Tasks help Customer Success teams manage customer-related work.
+Each Task contains:
+Title
+Description
+Customer
+Environment (Optional)
+Assigned User
+Priority
+Due Date
+Status
+Progress
+Estimated Time
+Actual Time
+Attachments supported.
+Comments supported.
+Tags supported.
+Task Status
+Managed dynamically.
+Examples:
+To Do
+In Progress
+Waiting Customer
+Blocked
+Done
+Notifications
+Task Assigned
+Due Soon
+Overdue
+Completed
+Business Rules
+Tasks may belong to:
+Customer
+Environment
+Both
+20. Customer Health Score
+Purpose
+Provide a quick visual indication of customer satisfaction and operational stability.
+Health Score helps Customer Success prioritize customer engagement.
+Initial Version
+Health Score is 
+manually managed
+ in Version 1.
+Future versions may calculate it automatically.
+Health Levels
+Configurable.
+Examples:
+🟢
+ Healthy
+🟡
+ Attention Required
+🔴
+ Critical
+Health Factors (Manual Assessment)
+Users may consider:
+Support Experience
+Meeting Feedback
+Open Issues
+Product Usage
+Customer Satisfaction
+Each Health Update records:
+Previous Score
+New Score
+Updated By
+Date
+Reason
+Health updates appear in Timeline.
+Notifications generated when:
+Customer becomes Critical
+Customer returns to Healthy
+21. Success Plans
+Success Plans define long-term objectives for each customer.
+Examples:
+Complete Training
+Increase Product Adoption
+Launch New Module
+Improve Customer Satisfaction
+Each Success Plan contains:
+Title
+Customer
+Environment (Optional)
+Description
+Start Date
+Target Date
+Progress
+Status
+Owner
+Supported Features
+Tasks
+Attachments
+Comments
+Timeline
+Tags
+22. Renewals
+Purpose
+Track customer contract renewals.
+Each Renewal contains:
+Customer
+Contract
+Renewal Date
+Contract Value
+Renewal Status
+Assigned Owner
+Notes
+Renewal Status examples
+Upcoming
+In Progress
+Renewed
+Cancelled
+Lost
+(Statuses configurable.)
+Notifications
+90 Days Before Renewal
+60 Days
+30 Days
+14 Days
+7 Days
+Renewal Today
+Overdue Renewal
+(Reminder intervals should be configurable through Settings.)
+Business Rules
+Renewal reminders stop automatically once the renewal is marked as completed or cancelled.
+23. Jira Integration
+Technical issues discovered during customer engagement should be reported without leaving the platform.
+Workflow
+Customer Success User
+↓
+Create Ticket
+↓
+Fill Ticket Information
+↓
+Submit
+↓
+Jira API
+↓
+Issue Created
+↓
+Store Jira Reference
+Stored Information
+Jira Issue Key
+Jira URL
+Status
+Priority
+Assignee
+Reporter
+Creation Date
+Last Update
+Users should also be able to:
+Open Jira Issue
+Refresh Jira Status
+View Jira Comments (Future Enhancement)
+Business Rules
+The platform is 
+not
+ intended to replace Jira.
+Jira remains the system of record for software development work.
+QOMP serves as the operational interface for creating and tracking customer-related issues.
+24. Calendar View
+A unified calendar displays:
+Meetings
+Tasks
+Renewals
+Planned Deployments 
+(if user has Environment access)
+Personal Assignments
+Users only see events they are authorized to access.
+Supported Views
+Day
+Week
+Month
+25. Assignment Engine
+Every work item in the platform may be assigned to one or more users.
+Supported Objects:
+Tasks
+Meetings
+Renewals
+Jira Tickets
+Success Plans
+Future Modules
+"My Work" automatically aggregates all assigned work regardless of source module.
+26. Customer Success Timeline
+The timeline consolidates every interaction related to the customer.
+Examples:
+Meeting Scheduled
+Meeting Completed
+Task Assigned
+Task Completed
+Health Updated
+Renewal Created
+Jira Ticket Created
+Comment Added
+Attachment Uploaded
+Timeline visibility always respects user permissions.
+27. Business Rules
+BR-CS-004
+Every Customer Success activity must reference a 
+Customer
+.
+BR-CS-005
+Environment reference is optional unless the activity specifically relates to an environment.
+BR-CS-006
+Deleting meetings, tasks, or renewals performs a Soft Delete only.
+BR-CS-007
+Every status change generates a Timeline event.
+BR-CS-008
+Attachments and comments inherit permissions from the parent record.
+BR-CS-009
+Notifications are generated only for users who belong to the Customer Success module and have permission to view the related record.
+BR-CS-010
+"My Work" displays assignments from all accessible modules in a single unified view.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 4 – Environment Management Module
+28. Environment Management Module
+28.1 Purpose
+The Environment Management Module provides a centralized workspace for managing all customer environments, infrastructure details, deployments, operational status, testing activities, and environment-related documentation.
+Each environment belongs to a single customer and serves as the operational hub for all technical activities related to that customer.
+28.2 Objectives
+The module should allow users to:
+Register customer environments.
+Track environment health.
+Manage portals and services.
+Track deployments.
+Manage certificates.
+Track testing activities.
+Store environment documentation.
+Create technical tickets.
+Maintain operational history.
+29. Environment Structure
+A customer may own multiple environments.
+Example:
+Customer
+│
+├
+──
+ Production
+├
+──
+ Staging
+├
+──
+ UAT
+├
+──
+ Demo
+└── Development
+Every Environment belongs to exactly one Customer.
+30. Environment Details
+Each Environment contains:
+General Information
+Environment Name
+Environment Code
+Customer
+Environment Type
+Description
+Status
+Owner
+Creation Date
+Technical Information
+Hosting Provider
+Server Information
+Database
+Backend URL
+API URL
+Resource Group
+Subscription (Optional)
+Version
+Notes
+Free-text operational notes.
+Tags
+Free Tags are fully supported.
+Examples
+#Production
+#Critical
+#VIP
+#Migration
+Attachments
+Examples:
+Architecture Diagram
+Network Diagram
+Configuration Files
+Deployment Guide
+Documentation
+Comments
+Optional discussion thread.
+31. Environment Components
+Every Environment may contain multiple technical components.
+Initially supported components include:
+Student Portal
+Stores:
+URL
+Current Version
+Status
+Last Deployment
+Teacher Portal
+Stores:
+URL
+Current Version
+Status
+Last Deployment
+Backend
+Stores:
+API URL
+Version
+Status
+AI Services
+Stores:
+Service Name
+Endpoint
+Status
+Version
+Database
+Stores:
+Database Name
+Version
+Status
+Future components can be added without changing the platform architecture.
+Examples:
+Mobile API
+Payment Gateway
+Notification Service
+Reporting Service
+32. Environment Status
+Version 1 uses 
+Manual Status Updates
+.
+Supported examples:
+🟢
+ Online
+🟡
+ Degraded
+🔴
+ Offline
+⚪
+ Maintenance
+Statuses are configurable through Settings.
+Every status change records:
+Previous Status
+New Status
+Updated By
+Date
+Reason
+Status changes automatically create Timeline events.
+33. Deployments
+Purpose
+Track every deployment performed on an environment.
+Each Deployment contains:
+Deployment Name
+Customer
+Environment
+Component
+Version
+Deployment Type
+Deployment Date
+Requested By
+Performed By
+Status
+Notes
+Deployment Types
+(Configurable)
+Examples:
+Release
+Hotfix
+Patch
+Rollback
+Deployment Status
+(Configurable)
+Examples:
+Planned
+In Progress
+QA
+Completed
+Failed
+Rolled Back
+Supported Features
+Attachments
+Comments
+Tags
+Timeline
+Notifications
+Deployment Started
+Deployment Completed
+Deployment Failed
+Rollback Completed
+Business Rules
+Every deployment belongs to exactly one Environment.
+34. Certificates
+The platform tracks SSL certificates and other environment-related certificates.
+Each Certificate contains:
+Certificate Name
+Environment
+Certificate Type
+Expiration Date
+Issued By
+Status
+Reminder Notifications
+Configurable reminder intervals.
+Examples:
+90 Days
+60 Days
+30 Days
+14 Days
+7 Days
+Expired
+Business Rules
+Expired certificates should be highlighted throughout the platform.
+35. Testing
+Testing records validate deployments before release.
+Each Test Record contains:
+Customer
+Environment
+Deployment
+Test Type
+Tester
+Test Date
+Result
+Notes
+Result Examples
+Passed
+Failed
+Blocked
+Retest Required
+(Configurable)
+Supported Features
+Attachments
+Comments
+Tags
+Notifications
+Testing Assigned
+Testing Completed
+Testing Failed
+36. Features Management
+Each Environment maintains a list of enabled features.
+Example
+Production
+✓
+ Attendance
+✓
+ Grades
+✓
+ LMS
+✓
+ AI Assistant
+✗
+ Online Exams
+Each Feature contains:
+Feature Name
+Status
+Enabled Date
+Notes
+Future enhancement:
+Feature versions.
+37. Technical Documentation
+Each Environment may store documentation.
+Examples
+Deployment Guide
+Configuration Manual
+API Documentation
+Database Documentation
+Support Guide
+All documentation supports:
+Attachments
+Comments
+Timeline
+38. Jira Integration
+Technical issues discovered within an Environment can be reported directly.
+Workflow
+Environment
+↓
+Create Ticket
+↓
+Submit
+↓
+Jira
+↓
+Issue Created
+↓
+Issue Key Stored
+Stored Information
+Issue Key
+URL
+Priority
+Assignee
+Status
+39. Environment Dashboard
+Displays operational KPIs.
+Widgets may include:
+Online Environments
+Offline Environments
+Maintenance Environments
+Upcoming Certificates
+Recent Deployments
+Failed Deployments
+Pending Testing
+Open Technical Tickets
+Widgets are displayed according to user permissions.
+40. Environment 360 View
+Every Environment provides a complete operational view.
+Tabs include:
+Overview
+General summary.
+Components
+Student Portal
+Teacher Portal
+Backend
+AI
+Database
+Deployments
+Deployment history.
+Certificates
+Certificate list.
+Testing
+Testing history.
+Jira
+Linked Jira issues.
+Files
+Attachments.
+Comments
+Discussion.
+Timeline
+Operational history.
+Related Tags
+Environment Tags.
+41. Timeline
+The Environment Timeline automatically records:
+Environment Created
+Status Changed
+Deployment Started
+Deployment Completed
+Deployment Failed
+Certificate Added
+Certificate Renewed
+Testing Started
+Testing Completed
+Ticket Created
+File Uploaded
+Comment Added
+Timeline visibility respects permissions.
+42. Business Rules
+BR-ENV-001
+Every Environment belongs to exactly one Customer.
+BR-ENV-002
+One Customer may own unlimited Environments.
+BR-ENV-003
+Every Environment must contain at least one logical component.
+(Student Portal, Teacher Portal, Backend, AI, Database, or future components.)
+BR-ENV-004
+Health Status is updated manually in Version 1.
+BR-ENV-005
+Deleting an Environment performs a Soft Delete only.
+BR-ENV-006
+Deployments cannot exist without an Environment.
+BR-ENV-007
+Certificates belong to a single Environment.
+BR-ENV-008
+Testing records belong to one Deployment and one Environment.
+BR-ENV-009
+All Environment activities automatically generate Timeline events.
+BR-ENV-010
+Notifications are delivered only to users who have Environment Management module access.
+BR-ENV-011
+Search results must never expose Environment information to unauthorized users.
+BR-ENV-012
+Attachments, Comments, Tags, Timeline, Favorites, and Audit Logs are supported across all Environment entities.
+43. Entity Relationships
+Customer
+    │
+    
+├
+──────────────┐
+    │              │
+Environment 1   Environment 2
+    │              │
+    
+├
+──
+ Student Portal
+    
+├
+──
+ Teacher Portal
+    
+├
+──
+ Backend
+    
+├
+──
+ AI Services
+    
+├
+──
+ Database
+    │
+    
+├
+──
+ Deployments
+    
+├
+──
+ Certificates
+    
+├
+──
+ Testing
+    
+├
+──
+ Jira Tickets
+    
+├
+──
+ Files
+    
+├
+──
+ Comments
+    
+├
+──
+ Timeline
+    └── Tags
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 5 – Platform Core Services
+44. Platform Core Services
+Purpose
+Platform Core Services provide shared functionality across all modules. Instead of each module implementing its own search, notifications, comments, or attachments, these capabilities are centralized and reusable.
+Every current and future module should integrate with these services.
+Core Services
+The platform provides the following shared services:
+Global Notification Center
+Universal Search
+Global Activity Timeline
+Attachment Service
+Comment Service
+Free Tags Engine
+Favorites
+My Work
+Audit Log
+Soft Delete
+Custom Fields Engine
+Dynamic Status Engine
+Lookup Management
+Relationship Engine
+45. Universal Search
+Purpose
+Allow users to quickly find any accessible record from a single search bar.
+The search should eliminate the need to navigate between modules.
+Supported Modules
+Search supports all current and future modules.
+Examples:
+Customers
+Schools
+Contacts
+Environments
+Meetings
+Tasks
+Jira Tickets
+Deployments
+Certificates
+Testing
+Reports
+Future modules:
+HR
+Finance
+Inventory
+Assets
+Search Behavior
+Search should support:
+Keyword Search
+Partial Matching
+Search by Tags
+Search by IDs
+Search by Custom Fields
+Search by Codes
+Search by URLs (where applicable)
+Permission Filtering
+This is a mandatory business rule.
+Users only receive results they have permission to access.
+Example
+A user assigned only to Customer Success:
+May see
+Customers
+Meetings
+Tasks
+Cannot see
+Deployments
+Environment Details
+Finance Records
+Those records should behave as if they do not exist.
+Search Results
+Results are grouped by module.
+Example
+Customers (3)
+Environments (2)
+Meetings (4)
+Tasks (6)
+Tickets (1)
+Each result displays:
+Icon
+Title
+Module
+Short Description
+Last Updated
+46. Global Notification Center
+Purpose
+Provide a single notification hub for all modules.
+Instead of every module having its own notification screen, users receive one centralized notification feed.
+Notification Sources
+Examples:
+Customer Success
+Meeting Reminder
+Renewal Reminder
+Health Changed
+Environment
+Deployment Completed
+Deployment Failed
+Certificate Expiring
+Status Changed
+Jira
+Ticket Assigned
+Ticket Updated
+Ticket Closed
+Future Modules
+HR
+Finance
+Inventory
+Notification Types
+Examples
+Information
+Warning
+Critical
+Success
+Notification Status
+Unread
+Read
+Archived
+Supported Actions
+Mark as Read
+Mark All as Read
+Archive
+Open Related Record
+Business Rules
+Notifications only appear for users who:
+Belong to the related module.
+Have permission to access the related record.
+47. Global Activity Timeline
+Purpose
+Provide a chronological history of business activities across the platform.
+Every significant action automatically generates a Timeline Event.
+Examples
+Customer Created
+Customer Updated
+Meeting Scheduled
+Meeting Completed
+Task Assigned
+Task Completed
+Environment Created
+Deployment Completed
+Testing Passed
+Certificate Renewed
+Jira Ticket Created
+File Uploaded
+Comment Added
+Timeline Event Structure
+Each event stores:
+Event Type
+Module
+Related Record
+Performed By
+Date
+Time
+Description
+Visibility
+Timeline always respects permissions.
+Users never see events from unauthorized modules.
+48. Attachment Service
+Purpose
+Provide unified file management across the platform.
+Supported File Types
+PDF
+Word
+Excel
+PowerPoint
+Images
+ZIP
+Text Files
+Other supported formats
+Attachment Information
+Each attachment stores:
+File Name
+File Extension
+File Size
+Upload Date
+Uploaded By
+Parent Record
+Features
+Upload
+Download
+Preview (where supported)
+Replace
+Soft Delete
+Business Rules
+Attachments inherit permissions from the parent record.
+49. Comment Service
+Purpose
+Allow users to collaborate directly within business records.
+Comments are optional and enabled per module.
+Comment Structure
+Each comment stores:
+Author
+Date
+Time
+Text
+Future Enhancements
+@Mentions
+Emoji Reactions
+Rich Text
+File Attachments
+Business Rules
+Comments inherit permissions from their parent record.
+50. Free Tags Engine
+Purpose
+Provide flexible categorization across all modules.
+Features
+Users may create any tag.
+Examples
+#VIP
+#Production
+#Hotfix
+#Urgent
+#SchoolA
+#NeedReview
+Auto Suggestions
+Previously used tags appear as suggestions.
+Users may:
+Use suggested tags
+or
+Create new tags.
+Tag Search
+Clicking a tag displays every accessible record using that tag.
+Permission filtering always applies.
+51. Favorites
+Purpose
+Allow users to pin frequently used records.
+Favorites are completely optional.
+Supported Objects
+Customers
+Environments
+Reports
+Dashboards
+Future Modules
+Favorites are private.
+One user's favorites never affect another user.
+52. My Work
+Purpose
+Provide one place for every assignment.
+Instead of opening multiple modules, users can manage all assigned work from one screen.
+Supported Items
+Meetings
+Tasks
+Jira Tickets
+Deployments
+Testing
+Renewals
+Future assignments automatically appear here.
+Filtering
+Users may filter by:
+Due Date
+Module
+Priority
+Status
+53. Audit Log
+Purpose
+Record every significant action performed inside the platform.
+Logged Actions
+Examples
+Create
+Edit
+Delete
+Restore
+Export
+Login
+Logout
+Permission Changes
+Status Changes
+Audit Information
+Each record stores:
+User
+Action
+Module
+Record ID
+Previous Value
+New Value
+IP Address (Optional)
+Date
+Time
+Audit Logs cannot be modified by normal users.
+54. Soft Delete
+Instead of permanently deleting data,
+records become:
+Inactive
+Hidden from normal users
+Recoverable
+Supported Objects
+All business entities.
+Only authorized users may restore deleted records.
+55. Custom Fields Engine
+Purpose
+Allow administrators to extend modules without development.
+Supported Field Types
+Text
+Number
+Date
+Checkbox
+Dropdown
+Multi Select
+URL
+Email
+Phone
+Supported Modules
+Every module.
+Examples
+Customer
+Environment
+Meeting
+Deployment
+Future modules
+Business Rules
+Custom Fields become searchable.
+Custom Fields appear in exports.
+56. Dynamic Status Engine
+Statuses are configurable.
+The platform never hardcodes business statuses.
+Examples
+Task
+To Do
+In Progress
+Done
+Deployment
+Planned
+QA
+Released
+Rollback
+Meeting
+Scheduled
+Completed
+Cancelled
+Future modules define their own workflows.
+57. Lookup Management
+Lookup values are configurable.
+Examples
+Priority
+Department
+Meeting Type
+Environment Type
+Deployment Type
+Testing Type
+Customer Type
+Certificate Type
+Administrators may:
+Create
+Edit
+Deactivate
+Restore
+Lookup values.
+58. Relationship Engine
+Purpose
+Allow modules to reference each other without duplication.
+Examples
+Customer
+↓
+Environment
+↓
+Deployment
+↓
+Testing
+↓
+Jira Ticket
+Another example
+Customer
+↓
+Meeting
+↓
+Task
+↓
+Renewal
+Relationship View
+Each record should display all related records.
+Example
+Customer
+↓
+Related
+Meetings
+Environments
+Deployments
+Tickets
+Files
+Comments
+Timeline
+Tags
+This creates a complete 360° operational view.
+59. Global Platform Business Rules
+BR-PL-001
+Every module should support Attachments whenever applicable.
+BR-PL-002
+Comments are optional per module.
+BR-PL-003
+Free Tags are available across all modules.
+BR-PL-004
+Search always respects user permissions.
+BR-PL-005
+Notifications always respect user permissions and module membership.
+BR-PL-006
+Timeline events are automatically generated by business actions.
+BR-PL-007
+Favorites are user-specific.
+BR-PL-008
+Soft Delete is preferred over permanent deletion.
+BR-PL-009
+Custom Fields are configurable without application deployment.
+BR-PL-010
+Business Statuses are configurable through Settings.
+BR-PL-011
+Lookup values are configurable through Settings.
+BR-PL-012
+Relationship Engine should allow future modules to integrate without redesigning the platform.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 6 – Reports, User Management & Settings
+60. Reports Module
+60.1 Purpose
+The Reports Module provides users with operational insights by displaying business data and allowing authorized users to export reports.
+The MVP focuses on predefined reports only. Report Builder is out of scope.
+Supported Reports
+Customer Reports
+Total Customers 
+Active Customers 
+Customers by Status 
+Customers by Type 
+Customers by Account Manager 
+Customer Success Reports
+Meetings Report 
+Tasks Report 
+Renewals Report 
+Customer Health Report 
+Environment Reports
+Environments 
+Deployments 
+Certificates 
+Testing 
+Environment Status 
+Jira Reports
+Open Tickets 
+Closed Tickets 
+Tickets by Priority 
+Tickets by Assignee 
+Report Features
+Every report supports:
+Search 
+Filters 
+Sorting 
+Export 
+Pagination 
+Export Formats
+Supported formats:
+Excel (.xlsx) 
+PDF (.pdf) 
+CSV (.csv) 
+Business Rules
+Reports only include data the logged-in user is authorized to access.
+61. User Management
+Purpose
+Manage platform users and their permissions.
+Each User contains:
+Username 
+Password (Encrypted) 
+Status 
+Role 
+Module Membership 
+User Status
+Examples:
+Active 
+Inactive 
+Locked 
+(Configurable)
+User Operations
+Create User 
+Edit User 
+Reset Password 
+Activate User 
+Deactivate User 
+Soft Delete User 
+62. Role Management
+Roles define 
+what users can do
+.
+Default Roles:
+Super Admin 
+Admin 
+Manager 
+Employee 
+Read Only 
+Each Role controls permissions such as:
+View 
+Create 
+Edit 
+Delete 
+Restore 
+Export 
+Manage Users 
+Manage Settings 
+63. Module Membership
+Module Membership defines 
+where users can work
+.
+Examples:
+Dashboard 
+Customer Management 
+Customer Success 
+Environment Management 
+Reports 
+Future:
+HR 
+Finance 
+Inventory 
+Business Rules
+Users may belong to multiple modules simultaneously.
+Membership affects:
+Visible Modules 
+Search Results 
+Notifications 
+Timeline 
+Dashboard Widgets 
+Assignments 
+64. Settings Module
+Purpose
+The Settings Module centralizes all platform configuration and administrative options.
+Only authorized users may access Settings.
+64.1 General Settings
+Contains global platform configuration.
+Examples:
+Company Name 
+Company Logo 
+Default Language 
+(Future)
+ 
+Date Format 
+Time Zone 
+64.2 User & Security Settings
+Manage:
+Users 
+Roles 
+Module Membership 
+Password Reset 
+Future Enhancements:
+Password Policy 
+Session Timeout 
+Multi-Factor Authentication 
+64.3 Lookup Management
+Administrators can manage all lookup values without code changes.
+Examples:
+Customer
+Customer Types 
+Industries 
+Meetings
+Meeting Types 
+Environment
+Environment Types 
+Deployment
+Deployment Types 
+Testing
+Testing Types 
+Certificates
+Certificate Types 
+Priority
+Low 
+Medium 
+High 
+Critical 
+Each Lookup supports:
+Create 
+Edit 
+Disable 
+Restore 
+64.4 Status Management
+Every business workflow uses configurable statuses.
+Examples:
+Meeting
+Planned 
+Completed 
+Cancelled 
+Task
+To Do 
+In Progress 
+Waiting Customer 
+Done 
+Deployment
+Planned 
+QA 
+Released 
+Failed 
+Rollback 
+Renewal
+Upcoming 
+Renewed 
+Lost 
+Administrators may:
+Create 
+Rename 
+Reorder 
+Disable Statuses 
+64.5 Custom Fields
+Administrators can add new fields without development.
+Supported Modules:
+Customer 
+Environment 
+Meeting 
+Task 
+Deployment 
+Renewal 
+Supported Field Types:
+Text 
+Number 
+Date 
+Checkbox 
+Dropdown 
+Multi Select 
+URL 
+Email 
+64.6 Notification Settings
+Administrators configure notification behavior.
+Examples:
+Renewal Reminder Days
+90 
+60 
+30 
+14 
+7 
+Certificate Reminder Days
+90 
+60 
+30 
+14 
+7 
+Enable/Disable notifications per module.
+64.7 Jira Integration Settings
+Stores Jira connection information.
+Examples:
+Jira Base URL 
+API Token 
+Project Key 
+Default Issue Type 
+Administrators can:
+Test Connection 
+Update Credentials 
+Enable/Disable Integration 
+64.8 Audit Settings
+Configure:
+Audit Retention Period 
+Export Audit Logs 
+Future Enhancement:
+Automatic archive.
+64.9 Attachment Settings
+Configuration options:
+Maximum File Size 
+Allowed File Types 
+Storage Method:
+Database Storage
+(as approved for Version 1)
+64.10 Tags Settings
+Since Tags are free-form, this section is informational.
+Administrators can:
+View most used tags 
+Delete inappropriate tags 
+Merge duplicate tags 
+(Future)
+ 
+64.11 Favorites Settings
+No global configuration is required.
+Favorites remain user-specific.
+64.12 System Information
+Displays:
+Application Version 
+Database Version 
+Last Deployment 
+Environment Name 
+Build Number 
+(Future)
+ 
+65. Business Rules
+BR-ADM-001
+Only authorized users may access Settings.
+BR-ADM-002
+Changing Lookup values must not affect historical records.
+BR-ADM-003
+Changing Status definitions must not modify previous workflow history.
+BR-ADM-004
+Users cannot grant permissions higher than their own.
+BR-ADM-005
+Passwords must always be stored encrypted.
+BR-ADM-006
+Database attachment storage must enforce configured file size limits.
+BR-ADM-007
+All administrative actions generate Audit Log entries.
+BR-ADM-008
+Configuration changes take effect immediately unless explicitly stated otherwise.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 7 – Navigation, Permissions, Notifications, Workflows & Non-Functional Requirements
+66. Navigation Structure
+Purpose
+The platform should provide a consistent navigation experience across all modules while ensuring users only see modules they are authorized to access.
+The navigation menu is dynamically generated based on:
+User Role
+Module Membership
+Feature Flags
+Main Navigation
+Dashboard
+Customer Management
+    
+├
+──
+ Customers
+    
+├
+──
+ Contacts
+    └── Schools
+Customer Success
+    
+├
+──
+ Meetings
+    
+├
+──
+ Tasks
+    
+├
+──
+ Success Plans
+    
+├
+──
+ Renewals
+    └── Calendar
+Environment Management
+    
+├
+──
+ Environments
+    
+├
+──
+ Deployments
+    
+├
+──
+ Certificates
+    
+├
+──
+ Testing
+    └── Documentation
+Reports
+Settings
+    
+├
+──
+ Users
+    
+├
+──
+ Roles
+    
+├
+──
+ Module Membership
+    
+├
+──
+ Master Data
+    
+├
+──
+ Status Management
+    
+├
+──
+ Custom Fields
+    
+├
+──
+ Feature Management
+    
+├
+──
+ Notification Settings
+    
+├
+──
+ Jira Integration
+    
+├
+──
+ Attachment Settings
+    
+├
+──
+ Maintenance Mode
+    
+├
+──
+ Login Audit
+    
+├
+──
+ Audit Log
+    
+├
+──
+ Recycle Bin
+    └── System Information
+Dynamic Navigation Rules
+The navigation menu must automatically:
+Hide inaccessible modules.
+Hide disabled features.
+Respect Feature Flags.
+Respect Module Membership.
+Respect User Permissions.
+Example:
+An Employee assigned only to Customer Success should never see:
+Environment Management
+Settings
+User Management
+67. Permission Matrix
+The platform uses 
+Role-Based Access Control (RBAC)
+ combined with 
+Module Membership
+.
+Standard Permissions
+Permission
+Description
+View
+View records
+Create
+Create new records
+Edit
+Modify existing records
+Delete
+Soft Delete records
+Restore
+Restore deleted records
+Export
+Export data
+Manage
+Administrative operations
+Permission Matrix
+Module
+View
+Create
+Edit
+Delete
+Restore
+Export
+Manage
+Dashboard
+✔
+-
+-
+-
+-
+-
+-
+Customers
+✔
+✔
+✔
+✔
+✔
+✔
+✔
+Customer Success
+✔
+✔
+✔
+✔
+✔
+✔
+✔
+Environment
+✔
+✔
+✔
+✔
+✔
+✔
+✔
+Reports
+✔
+-
+-
+-
+-
+✔
+-
+Settings
+✔
+✔
+✔
+✔
+-
+-
+✔
+Note:
+ Actual permissions are assigned per Role and can be customized.
+Permission Evaluation Order
+Every request must pass the following validation:
+User Login
+      ↓
+User Status = Active?
+      ↓
+Role Permission
+      ↓
+Module Membership
+      ↓
+Feature Enabled?
+      ↓
+Record-Level Permission
+      ↓
+Allow Access
+If any validation fails, access is denied.
+68. Notification Matrix
+Notifications are generated automatically by business events.
+Module
+Notification
+Customer
+Customer Created
+Customer
+Customer Updated
+Customer Success
+Meeting Reminder
+Customer Success
+Task Assigned
+Customer Success
+Task Overdue
+Customer Success
+Renewal Reminder
+Customer Success
+Health Changed
+Environment
+Environment Created
+Environment
+Deployment Started
+Environment
+Deployment Completed
+Environment
+Deployment Failed
+Environment
+Certificate Expiring
+Environment
+Testing Assigned
+Jira
+Ticket Created
+Jira
+Ticket Updated
+Jira
+Ticket Closed
+Notification Delivery Rules
+Notifications are delivered only if:
+User belongs to the module.
+User has permission to view the related record.
+Feature is enabled.
+User account is active.
+Notification Priority
+Supported priorities:
+Information
+Success
+Warning
+Critical
+69. Workflow Standards
+Every business process follows the same lifecycle.
+Standard Workflow
+Create
+    ↓
+Assign
+    ↓
+In Progress
+    ↓
+Review (Optional)
+    ↓
+Completed
+    ↓
+Archived
+Individual modules may extend this workflow using Dynamic Status Management.
+Customer Lifecycle
+Lead (Future)
+↓
+Customer Created
+↓
+Contract Signed
+↓
+Environment Created
+↓
+Customer Success Activities
+↓
+Renewals
+↓
+Closed (Optional)
+Meeting Workflow
+Create Meeting
+↓
+Schedule
+↓
+Reminder
+↓
+Meeting Conducted
+↓
+Summary Added
+↓
+Completed
+Task Workflow
+Create
+↓
+Assign
+↓
+In Progress
+↓
+Waiting
+↓
+Completed
+Deployment Workflow
+Planned
+↓
+Deployment Started
+↓
+Testing
+↓
+Completed
+↓
+Rollback (if required)
+Jira Workflow
+Create from QOMP
+↓
+Jira Issue Created
+↓
+Development
+↓
+Testing
+↓
+Done
+The workflow inside Jira remains the source of truth. QOMP synchronizes status only.
+70. Feature Management
+Administrators can enable or disable platform modules and features.
+Examples:
+Feature
+Enabled
+Dashboard
+✔
+Customer Success
+✔
+Environment
+✔
+Reports
+✔
+Jira Integration
+✔
+Notifications
+✔
+Disabled features:
+Do not appear in navigation.
+Cannot be accessed via URL.
+Cannot be returned in Search.
+Cannot generate Notifications.
+71. Maintenance Mode
+The platform supports global maintenance mode.
+Configuration includes:
+Enable / Disable
+Maintenance Message
+Expected End Time
+Allow Admin Access
+When enabled:
+Normal users cannot log in.
+Administrators may still access the platform if configured.
+72. Login Audit
+The platform records authentication events.
+Tracked Events:
+Successful Login
+Failed Login
+Logout
+Password Reset
+Account Locked
+Each record stores:
+Username
+Date
+Time
+IP Address (Optional)
+Result
+73. Recycle Bin
+Soft Deleted records are stored in the Recycle Bin.
+Features:
+Search
+Filter by Module
+Restore
+Permanent Delete (Super Admin only)
+Business Rules:
+Only Soft Deleted records appear.
+Permanent deletion cannot be undone.
+74. Non-Functional Requirements
+Security
+Passwords must be encrypted.
+RBAC is mandatory.
+Module Membership is mandatory.
+Audit Logs are immutable.
+Session validation on every request.
+Performance
+Search results should return within 2 seconds under normal load.
+Lists must support pagination.
+Lazy loading should be used where appropriate.
+Dashboard widgets should load independently to improve responsiveness.
+Availability
+Graceful error handling.
+Automatic recovery after temporary failures where possible.
+No data loss on successful transaction completion.
+Scalability
+The platform must support adding new modules without changes to the platform core.
+Examples:
+HR
+Finance
+Inventory
+Assets
+Reliability
+Soft Delete protects business data.
+Audit Log preserves change history.
+Timeline records operational events.
+Maintainability
+Shared platform services must be reused across all modules.
+Examples:
+Notifications
+Search
+Timeline
+Comments
+Attachments
+Tags
+Backup & Recovery
+Database backups should be performed regularly.
+Attachments stored in the database are included in backup operations.
+Recovery procedures should support restoring the entire system to a consistent state.
+Logging
+The system must maintain:
+Audit Log
+Login Audit
+Error Logs (technical)
+Integration Logs (Jira)
+75. General Business Rules
+Users can belong to multiple modules.
+Users must never access unauthorized data.
+Feature Flags override module visibility.
+Timeline events are generated automatically.
+Notifications respect permissions and module membership.
+All business entities support Soft Delete unless explicitly excluded.
+Every business record can be traced through the Audit Log.
+Search never exposes restricted records.
+Shared services must behave consistently across all modules.
+Qorrect
+ Operations Management Platform (QOMP)
+Business Requirements Document (BRD)
+Part 8 – Final Project Scope, Roadmap & Governance
+76. MVP Scope
+The following features are included in Version 1 (MVP).
+Platform Core
+Dashboard 
+Universal Search 
+Global Timeline 
+Notification Center 
+My Work 
+Favorites 
+Recent Items 
+Watch Records 
+Free Tags 
+Comments 
+Attachments 
+Audit Log 
+Login Audit 
+Soft Delete 
+Recycle Bin 
+Custom Fields 
+Dynamic Status 
+Master Data Management 
+Feature Management 
+Maintenance Mode 
+Auto Numbering 
+Customer Management
+Customers 
+Contacts 
+Schools 
+Customer 360 View 
+Customer Success
+Meetings 
+Tasks 
+Success Plans 
+Renewals 
+Customer Health 
+Calendar 
+Environment Management
+Environments 
+Student Portal 
+Teacher Portal 
+Backend 
+AI Services 
+Database 
+Deployments 
+Certificates 
+Testing 
+Documentation 
+Integrations
+Jira Integration 
+Administration
+User Management 
+Roles 
+Module Membership 
+Settings 
+Reports 
+77. Future Roadmap
+The platform is designed to grow beyond CRM into a complete Operations Platform.
+Phase 2
+Potential enhancements include:
+Customer Success
+Automatic Health Score Calculation 
+Customer Satisfaction Surveys 
+SLA Tracking 
+Success Playbooks 
+Environment
+Live Environment Monitoring 
+Automatic Health Detection 
+Azure Integration 
+Version Comparison 
+Environment Cloning 
+Platform
+Microsoft SSO 
+Email Notifications 
+@Mentions in Comments 
+Rich Text Editor 
+Dashboard Analytics 
+Advanced Search Filters 
+Saved Views 
+Merge Duplicate Tags 
+File Preview Enhancements 
+Reports
+Report Builder 
+Scheduled Reports 
+Email Reports 
+Dashboard Analytics 
+Mobile
+Responsive Mobile Experience 
+Mobile Application 
+Push Notifications 
+AI
+AI Search Assistant 
+AI Insights 
+AI Recommendations 
+AI-generated Customer Summaries 
+Future Modules
+HR 
+Finance 
+Inventory 
+Assets 
+Procurement 
+Knowledge Base 
+Internal Help Desk 
+Vendor Management 
+Contract Management 
+78. Platform Design Principles
+Every new module added in the future must follow the same platform standards.
+Each module should support, where applicable:
+Search 
+Timeline 
+Attachments 
+Comments 
+Tags 
+Favorites 
+Watchers 
+Recent Items 
+Audit Log 
+Soft Delete 
+Custom Fields 
+Dynamic Status 
+Auto Numbering 
+Notifications 
+Reports 
+This ensures consistency across the platform.
+79. Auto Numbering Strategy
+Every business entity receives an automatically generated business reference.
+Entity
+Prefix
+Example
+Customer
+CUS
+CUS-000001
+Contact
+CON
+CON-000001
+School
+SCH
+SCH-000001
+Environment
+ENV
+ENV-000001
+Meeting
+MET
+MET-000001
+Task
+TSK
+TSK-000001
+Success Plan
+SPL
+SPL-000001
+Renewal
+REN
+REN-000001
+Deployment
+DEP
+DEP-000001
+Certificate
+CRT
+CRT-000001
+Testing
+TST
+TST-000001
+Jira Internal Reference
+JTK
+JTK-000001
+User
+USR
+USR-000001
+Business Rules
+Generated automatically. 
+Unique across the entity. 
+Immutable after creation. 
+Not reused after deletion. 
+Configurable prefixes. 
+Independent sequences per entity. 
+80. Watch Records
+Users may "Watch" any supported record.
+Supported entities:
+Customer 
+Environment 
+Meeting 
+Task 
+Deployment 
+Renewal 
+When watching a record, the user receives notifications for updates even if they are not assigned to it.
+Watching is optional and personal.
+81. Recent Items
+The platform stores the user's recently accessed records.
+Examples:
+Recently Opened Customers 
+Recently Opened Environments 
+Recently Opened Meetings 
+Recently Opened Tasks 
+Recent Items are user-specific and displayed on the Dashboard.
+82. Saved Filters
+Users can save frequently used filter combinations.
+Examples:
+My Active Customers 
+My Critical Tasks 
+Production Environments 
+Renewals This Month 
+Saved Filters are private by default.
+Future enhancement: Shared Filters.
+83. Assumptions
+The following assumptions apply to Version 1:
+Users authenticate using Username and Password. 
+Health Status is updated manually. 
+Attachments are stored in the database. 
+Jira remains the system of record for development work. 
+Reports are predefined (no Report Builder). 
+All modules follow shared platform services. 
+Users may belong to multiple modules. 
+Soft Delete is the default deletion strategy. 
+84. Risks
+Potential risks include:
+Risk
+Mitigation
+Large database due to file storage
+Monitor database size and review storage strategy in future versions
+Jira API changes
+Isolate integration behind a service layer
+Permission misconfiguration
+RBAC + Module Membership + Audit Logs
+Growing Master Data
+Centralized Master Data Management
+Increasing platform complexity
+Modular architecture and Feature Flags
+85. Success Criteria
+The MVP will be considered successful if it achieves the following:
+Centralizes customer and operational information. 
+Eliminates duplicate manual tracking. 
+Provides secure role-based access. 
+Integrates with Jira for issue creation. 
+Enables Customer Success workflows. 
+Provides complete Environment Management. 
+Supports future module expansion without redesign. 
+86. High-Level System Architecture
+                           Users
+                              │
+                              
+▼
+                     Authentication
+                              │
+                              
+▼
+                     Role Validation
+                              │
+                              
+▼
+                  Module Membership Check
+                              │
+                              
+▼
+                  Feature Flag Validation
+                              │
+                              
+▼
+                  Platform Core Services
+   ┌────────────────────────────────────────────────────┐
+   │ Search │ Timeline │ Notifications │ Audit │ Files │
+   │ Tags │ Favorites │ My Work │ Watchers │ Recent │
+   └────────────────────────────────────────────────────┘
+                              │
+ ┌──────────────
+┬
+──────────────
+┬
+──────────────┐
+ 
+▼
+              
+▼
+              
+▼
+              
+▼
+Customer   
+Customer
+ Success   Environment   Reports
+                              │
+                              
+▼
+                         Jira Integration
+87. Screen Sitemap
+Login
+↓
+Dashboard
+├
+──
+ My Work
+├
+──
+ Notifications
+├
+──
+ Timeline
+├
+──
+ Recent Items
+├
+──
+ Favorites
+↓
+Customer Management
+├
+──
+ Customers
+├
+──
+ Contacts
+└── Schools
+↓
+Customer Success
+├
+──
+ Meetings
+├
+──
+ Tasks
+├
+──
+ Success Plans
+├
+──
+ Renewals
+└── Calendar
+↓
+Environment
+├
+──
+ Environments
+├
+──
+ Deployments
+├
+──
+ Certificates
+├
+──
+ Testing
+└── Documentation
+↓
+Reports
+↓
+Settings
+├
+──
+ Users
+├
+──
+ Roles
+├
+──
+ Module Membership
+├
+──
+ Master Data
+├
+──
+ Status Management
+├
+──
+ Custom Fields
+├
+──
+ Feature Management
+├
+──
+ Notification Settings
+├
+──
+ Jira Integration
+├
+──
+ Attachment Settings
+├
+──
+ Maintenance Mode
+├
+──
+ Login Audit
+├
+──
+ Audit Log
+├
+──
+ Recycle Bin
+└── System Information
+88. Glossary
+Term
+Description
+Customer
+The organization using 
+Qorrect
+ services
+Environment
+A technical deployment for a customer
+Customer Success
+Post-sales customer engagement activities
+Deployment
+Software release to an environment
+Timeline
+Chronological history of business events
+Master Data
+Centralized reference values used across the platform
+Watcher
+A user subscribed to updates for a specific record
+Feature Flag
+Enable/Disable functionality without code changes
+My Work
+Consolidated list of assignments across modules
+Recycle Bin
+Storage for soft-deleted records
+Auto Number
+Business-friendly unique identifier
+89. Final Product Statement
+Qorrect
+ Operations Management Platform (QOMP) is a modular enterprise platform that unifies customer management, customer success, environment operations, and technical integrations into a single secure, scalable, and extensible solution.
+The platform is designed with reusable core services, configurable administration, and a modular architecture that supports future expansion into additional business domains without requiring architectural redesign.
