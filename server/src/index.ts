@@ -34,7 +34,11 @@ app.use('/api', ticketRoutes);
 // Initialize Background Jobs
 initSslCronJob();
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Full-Stack Backend Server running on http://localhost:${PORT}`);
-});
+// Start Server only if not running on Vercel
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Full-Stack Backend Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

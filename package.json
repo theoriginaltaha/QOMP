@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "server": "ts-node server/src/index.ts",
+    "start": "ts-node server/src/index.ts",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
