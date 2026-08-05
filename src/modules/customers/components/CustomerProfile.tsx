@@ -81,7 +81,7 @@ export const CustomerProfile: React.FC = () => {
   const handleDeleteContact = async (contactId: string, contactName: string) => {
     if (window.confirm(`Are you sure you want to delete ${contactName}?`)) {
       try {
-        const res = await fetch(`http://localhost:3000/api/contacts/${contactId}`, { method: 'DELETE' });
+        const res = await fetch(`/api/contacts/${contactId}`, { method: 'DELETE' });
         if (res.ok) await loadCustomer(id!);
       } catch (error) {
         console.error('Failed to delete contact', error);
@@ -91,7 +91,7 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateContact = async (contactId: string, data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/contacts/${contactId}`, {
+      const res = await fetch(`/api/contacts/${contactId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -109,7 +109,7 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateSchool = async (schoolId: string, data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/schools/${schoolId}`, {
+      const res = await fetch(`/api/schools/${schoolId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -147,7 +147,7 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdateAccountTeam = async (data: any) => {
     try {
-      await fetch(`http://localhost:3000/api/customers/${id}/team`, {
+      await fetch(`/api/customers/${id}/team`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -161,7 +161,7 @@ export const CustomerProfile: React.FC = () => {
   const handleDeleteCustomer = async () => {
     if (window.confirm(`Are you sure you want to delete ${customer.name}? This will move them to the Recycle Bin.`)) {
       try {
-        await fetch(`http://localhost:3000/api/customers/${id}`, { method: 'DELETE' });
+        await fetch(`/api/customers/${id}`, { method: 'DELETE' });
         navigate('/customers');
       } catch (error) {
         console.error('Failed to delete customer', error);
@@ -172,7 +172,7 @@ export const CustomerProfile: React.FC = () => {
 
   const handleUpdatePortals = async (data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/customers/${id}/portals`, {
+      const res = await fetch(`/api/customers/${id}/portals`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

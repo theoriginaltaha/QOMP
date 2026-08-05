@@ -29,8 +29,8 @@ export const GlobalAddTaskModal: React.FC<GlobalAddTaskModalProps> = ({ isOpen, 
   const fetchUsersAndCustomers = async () => {
     try {
       const [usersRes, customersRes] = await Promise.all([
-        fetch('http://localhost:3000/api/users'),
-        fetch('http://localhost:3000/api/customers')
+        fetch('/api/users'),
+        fetch('/api/customers')
       ]);
       const usersData = await usersRes.json();
       const customersData = await customersRes.json();

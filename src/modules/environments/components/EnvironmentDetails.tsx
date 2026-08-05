@@ -48,7 +48,7 @@ export const EnvironmentDetails: React.FC = () => {
 
   const handleUpdateCert = async (certId: string, data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/certificates/${certId}`, {
+      const res = await fetch(`/api/certificates/${certId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -62,7 +62,7 @@ export const EnvironmentDetails: React.FC = () => {
   const handleDeleteCert = async (certId: string) => {
     if (window.confirm('Are you sure you want to delete this certificate?')) {
       try {
-        await fetch(`http://localhost:3000/api/certificates/${certId}`, { method: 'DELETE' });
+        await fetch(`/api/certificates/${certId}`, { method: 'DELETE' });
         await loadEnvironment(id!);
       } catch (error) {
         console.error('Error deleting cert', error);
@@ -74,7 +74,7 @@ export const EnvironmentDetails: React.FC = () => {
 
   const handleUpdateEnvironment = async (envId: string, data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/environments/${envId}`, {
+      const res = await fetch(`/api/environments/${envId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -88,7 +88,7 @@ export const EnvironmentDetails: React.FC = () => {
   const handleDeleteEnvironment = async () => {
     if (window.confirm(`Are you sure you want to permanently delete the environment ${environment.name}? This will destroy all associated certificates and tickets.`)) {
       try {
-        await fetch(`http://localhost:3000/api/environments/${id}`, { method: 'DELETE' });
+        await fetch(`/api/environments/${id}`, { method: 'DELETE' });
         navigate('/environments');
       } catch (error) {
         console.error('Error deleting environment', error);

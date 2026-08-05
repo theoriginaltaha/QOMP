@@ -30,7 +30,7 @@ export const EditAccountTeamModal: React.FC<Props> = ({ isOpen, onClose, onSubmi
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/users');
+      const res = await fetch('/api/users');
       const data = await res.json();
       setUsers(data);
     } catch (error) {

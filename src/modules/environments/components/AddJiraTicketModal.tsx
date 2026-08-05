@@ -32,7 +32,7 @@ export const AddJiraTicketModal: React.FC<AddJiraTicketModalProps> = ({ isOpen, 
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/users');
+      const res = await fetch('/api/users');
       const data = await res.json();
       setUsers(data);
       if (data.length > 0 && !formData.assignee) {
@@ -45,7 +45,7 @@ export const AddJiraTicketModal: React.FC<AddJiraTicketModalProps> = ({ isOpen, 
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/customers');
+      const res = await fetch('/api/customers');
       const data = await res.json();
       setCustomers(data);
       if (data.length > 0 && !formData.customerId) {

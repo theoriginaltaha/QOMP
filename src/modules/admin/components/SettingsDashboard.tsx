@@ -32,7 +32,7 @@ export const SettingsDashboard: React.FC = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/users');
+      const res = await fetch('/api/users');
       const data = await res.json();
       setUsers(data);
     } catch (error) {
@@ -45,7 +45,7 @@ export const SettingsDashboard: React.FC = () => {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:3000/api/users', {
+      await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role })
@@ -81,7 +81,7 @@ export const SettingsDashboard: React.FC = () => {
       }));
 
     try {
-      await fetch(`http://localhost:3000/api/users/${selectedUser.id}/permissions`, {
+      await fetch(`/api/users/${selectedUser.id}/permissions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permissions: permissionsArray })

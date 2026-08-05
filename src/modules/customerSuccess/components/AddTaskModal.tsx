@@ -24,7 +24,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onS
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/users');
+      const res = await fetch('/api/users');
       const data = await res.json();
       setUsers(data);
       if (data.length > 0 && !formData.assignee) {

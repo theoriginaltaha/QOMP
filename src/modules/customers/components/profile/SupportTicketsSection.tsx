@@ -34,7 +34,7 @@ export const SupportTicketsSection: React.FC<SupportTicketsSectionProps> = ({ ti
               {ticket.attachmentUrl && (
                 <div style={{ marginTop: '1rem', paddingTop: '0.5rem', borderTop: '1px dashed var(--border-color)' }}>
                   <a 
-                    href={ticket.attachmentUrl.startsWith('http') ? ticket.attachmentUrl : `http://localhost:3000${ticket.attachmentUrl}`} 
+                    href={ticket.attachmentUrl.startsWith('http') ? ticket.attachmentUrl : `${ticket.attachmentUrl}`} 
                     target="_blank" 
                     rel="noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}

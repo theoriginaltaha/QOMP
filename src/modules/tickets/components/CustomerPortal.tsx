@@ -20,7 +20,7 @@ export const CustomerPortal: React.FC = () => {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/customers');
+      const res = await fetch('/api/customers');
       const data = await res.json();
       setCustomers(data);
     } catch (error) {
@@ -40,7 +40,7 @@ export const CustomerPortal: React.FC = () => {
       if (formData.link) formDataToSend.append('link', formData.link);
       if (file) formDataToSend.append('file', file);
 
-      const res = await fetch(`http://localhost:3000/api/customers/${formData.customerId}/tickets/support`, {
+      const res = await fetch(`/api/customers/${formData.customerId}/tickets/support`, {
         method: 'POST',
         body: formDataToSend
       });

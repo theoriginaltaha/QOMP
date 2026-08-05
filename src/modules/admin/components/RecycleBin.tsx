@@ -14,7 +14,7 @@ export const RecycleBin: React.FC = () => {
   const loadRecycleBin = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/recycle-bin/customers');
+      const res = await fetch('/api/recycle-bin/customers');
       const data = await res.json();
       setDeletedCustomers(data);
     } catch (error) {
@@ -27,7 +27,7 @@ export const RecycleBin: React.FC = () => {
   const handleRestore = async (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to restore ${name}?`)) {
       try {
-        await fetch(`http://localhost:3000/api/customers/${id}/restore`, { method: 'PATCH' });
+        await fetch(`/api/customers/${id}/restore`, { method: 'PATCH' });
         loadRecycleBin();
       } catch (error) {
         console.error('Error restoring customer', error);
@@ -38,7 +38,7 @@ export const RecycleBin: React.FC = () => {
   const handleHardDelete = async (id: string, name: string) => {
     if (window.confirm(`WARNING: Are you sure you want to PERMANENTLY DELETE ${name} and all of their related data (environments, tasks, meetings)? This cannot be undone.`)) {
       try {
-        await fetch(`http://localhost:3000/api/customers/${id}/hard`, { method: 'DELETE' });
+        await fetch(`/api/customers/${id}/hard`, { method: 'DELETE' });
         loadRecycleBin();
       } catch (error) {
         console.error('Error permanently deleting customer', error);

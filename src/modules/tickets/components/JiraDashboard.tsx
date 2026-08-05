@@ -14,7 +14,7 @@ export const JiraDashboard: React.FC = () => {
   const loadTickets = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/tickets/jira');
+      const res = await fetch('/api/tickets/jira');
       if (res.ok) {
         const data = await res.json();
         setTickets(data);
@@ -28,7 +28,7 @@ export const JiraDashboard: React.FC = () => {
 
   const handleAddTicket = async (data: any) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/customers/${data.customerId}/tickets/jira`, {
+      const res = await fetch(`/api/customers/${data.customerId}/tickets/jira`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -44,7 +44,7 @@ export const JiraDashboard: React.FC = () => {
   const handleDeleteTicket = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this Jira ticket?')) {
       try {
-        await fetch(`http://localhost:3000/api/tickets/jira/${id}`, { method: 'DELETE' });
+        await fetch(`/api/tickets/jira/${id}`, { method: 'DELETE' });
         await loadTickets();
       } catch (error) {
         console.error('Error deleting ticket', error);

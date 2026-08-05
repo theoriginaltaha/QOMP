@@ -24,11 +24,11 @@ const Layout: React.FC = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const statsRes = await fetch('http://localhost:3000/api/stats');
+        const statsRes = await fetch('/api/stats');
         setStats(await statsRes.json());
 
         if (user?.id) {
-          const notifsRes = await fetch(`http://localhost:3000/api/users/${user.id}/notifications`);
+          const notifsRes = await fetch(`/api/users/${user.id}/notifications`);
           setPersonalNotifs(await notifsRes.json());
         }
       } catch (e) {
@@ -63,7 +63,7 @@ const Layout: React.FC = () => {
         return;
       }
       try {
-        const res = await fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(searchQuery)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
         const data = await res.json();
         setSearchResults({
           customers: data.customers || [],
@@ -89,7 +89,7 @@ const Layout: React.FC = () => {
   const handleReadNotification = async (notif: any) => {
     if (!notif.isRead) {
       try {
-        await fetch(`http://localhost:3000/api/notifications/${notif.id}/read`, { method: 'PATCH' });
+        await fetch(`/api/notifications/${notif.id}/read`, { method: 'PATCH' });
         setPersonalNotifs(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: true } : n));
       } catch (error) {
         console.error(error);
@@ -104,7 +104,7 @@ const Layout: React.FC = () => {
 
   const handleGlobalTaskSubmit = async (data: any) => {
     try {
-      await fetch('http://localhost:3000/api/tasks', {
+      await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
