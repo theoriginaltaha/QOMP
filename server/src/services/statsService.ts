@@ -6,12 +6,7 @@ export const getDashboardStats = async () => {
   const activeTickets = await statsRepository.countActiveJiraTickets();
   const pendingTasks = await statsRepository.countPendingTasks();
 
-  // Mock data for integration with external platform
-  const userCount = 42500;
-  const questionsCount = 15420;
-  const examsCount = 385;
-
-  return { customerCount, envCount, activeTickets, pendingTasks, userCount, questionsCount, examsCount };
+  return { customerCount, envCount, activeTickets, pendingTasks };
 };
 
 export const searchEntities = async (query: string) => {

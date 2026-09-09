@@ -11,10 +11,7 @@ export const MainDashboard: React.FC = () => {
     customerCount: 0,
     envCount: 0,
     activeTickets: 0,
-    pendingTasks: 0,
-    userCount: 0,
-    questionsCount: 0,
-    examsCount: 0
+    pendingTasks: 0
   });
 
   useEffect(() => {
@@ -45,21 +42,6 @@ export const MainDashboard: React.FC = () => {
           value={stats.customerCount} 
           icon={<Users />} 
           onClick={() => navigate('/customers')}
-        />
-        <CardWidget 
-          title="Total Users (Integration)" 
-          value={stats.userCount} 
-          icon={<Users />} 
-        />
-        <CardWidget 
-          title="Total Questions (Integration)" 
-          value={stats.questionsCount} 
-          icon={<CheckCircle />} 
-        />
-        <CardWidget 
-          title="Total Exams (Integration)" 
-          value={stats.examsCount} 
-          icon={<CheckCircle />} 
         />
         <CardWidget 
           title="Provisioned Environments" 
